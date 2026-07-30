@@ -1,138 +1,65 @@
-# CLI Proxy API
+# CLI 代理 API
 
-English | [中文](README_CN.md) | [日本語](README_JA.md)
+一个为 CLI 提供 OpenAI/Gemini/Claude/Codex/Grok 兼容 API 接口的代理服务器。
 
-A proxy server that provides OpenAI/Gemini/Claude/Codex/Grok compatible API interfaces for CLI.
-
-You can access the following providers locally and with multiple CLI accounts through any OpenAI (including Responses), Gemini (including Interactions), or Claude-compatible client or SDK.
+您可以通过任何与 OpenAI（包括 Responses）、Gemini（包括 Interactions）或 Claude 兼容的客户端或 SDK，以本地方式或多 CLI 账户访问以下提供商。
 
 <table>
 <tbody>
     <tr>
-        <th align="center" width="100">Provider</th>
-        <th align="center">Description</th>
+        <th align="center" width="100">提供商</th>
+        <th align="center">说明</th>
     </tr>
     <tr>
-        <td align="center"><a href="https://www.kimi.com/code/?aff=cliproxyapi"><img src="./assets/logo/kimi.svg" alt="Kimi" width="28" height="28" /></a></td>
-        <td>Kimi series models (Kimi K3, Kimi K2.7 Code, etc.). <a href="https://platform.kimi.ai/docs/guide/kimi-k3-quickstart">Kimi K3</a> is Moonshot AI’s most capable model and the world’s first open 3T-class model. With 2.8 trillion parameters, native vision, and a 1-million-token context window, K3 is built for long-horizon coding, knowledge work, and reasoning. CLIProxyAPI supports Kimi through OAuth or compatible API interfaces. Try the <a href="https://www.kimi.com/code/?aff=cliproxyapi">Kimi Code subscription</a>, or get an API key from the <a href="https://platform.kimi.ai/?aff=cliproxyapi">Kimi Open Platform</a>. Thanks to Kimi for supporting CLIProxyAPI and the open-source community!</td>
+        <td align="center"><a href="https://www.kimi.com/code/"><img src="./assets/logo/kimi.svg" alt="Kimi" width="28" height="28" /></a></td>
+        <td>Kimi 系列模型，可通过 OAuth 或兼容 API 接入 CLIProxyAPI。</td>
     </tr>
     <tr>
-        <td align="center"><a href="https://platform.openai.com/docs/guide/gpt-5.6"><img src="./assets/logo/openai.svg" alt="OpenAI" width="28" height="28" /></a></td>
-        <td>OpenAI GPT series models (GPT 5.6, GPT 5.5, etc.). GPT-5.6 sets a new quality and efficiency baseline for complex production workflows. GPT-5.6 is especially token-efficient and improves frontend aesthetics, including layout, visual hierarchy, and design judgment.</td>
+        <td align="center"><a href="https://platform.openai.com/docs/"><img src="./assets/logo/openai.svg" alt="OpenAI" width="28" height="28" /></a></td>
+        <td>OpenAI GPT 系列模型，可通过 Codex OAuth 或兼容 API 接入 CLIProxyAPI。</td>
     </tr>
     <tr>
-        <td align="center"><a href="https://www.anthropic.com/claude/fable"><img src="./assets/logo/claude.svg" alt="Anthropic" width="28" height="28" /></a></td>
-        <td>Anthropic Claude series models (Claude Fable, Claude Opus, Claude Sonnet, etc.). Claude Fable 5 is Anthropic's most capable widely released model, built for the most demanding reasoning and long-horizon agentic work.</td>
+        <td align="center"><a href="https://www.anthropic.com/claude"><img src="./assets/logo/claude.svg" alt="Anthropic" width="28" height="28" /></a></td>
+        <td>Anthropic Claude 系列模型，可通过 Claude Code OAuth 或兼容 API 接入 CLIProxyAPI。</td>
     </tr>
     <tr>
         <td align="center"><a href="https://antigravity.google/"><img src="./assets/logo/antigravity.svg" alt="Antigravity" width="28" height="28" /></a></td>
-        <td>Google Gemini series models (Gemini 3.5 Flash, Gemini 3.1 Pro, etc.). Gemini 3.5 Flash provides sustained frontier-level intelligence optimized for real-world tasks at a higher speed and lower cost. Designed for the agentic era, it excels at sub-agent deployment, multi-step workflows, and long-horizon tasks at scale. This model is particularly effective for rapid agentic loops involving complex coding cycles and iterations.</td>
+        <td>Google Gemini 系列模型，可通过 Gemini CLI、AI Studio 或兼容 API 接入 CLIProxyAPI。</td>
     </tr>
     <tr>
         <td align="center"><a href="https://x.ai/grok"><img src="./assets/logo/xai.svg" alt="xAI" width="28" height="28" /></a></td>
-        <td>xAI Grok series models (Grok 4.5, Grok Composer 2.5 Fast, etc.). Grok 4.5 is SpaceXAI's frontier model built for coding, agentic tasks, and knowledge work. It was trained in SpaceXAI's data centers in Memphis with new datasets spanning science, engineering, and math.</td>
+        <td>xAI Grok 系列模型，可通过 Grok Build OAuth 或兼容 API 接入 CLIProxyAPI。</td>
     </tr>
 </tbody>
 </table>
 
+## 功能特性
 
-## Sponsor
+- 为 CLI 模型提供 OpenAI/Gemini/Claude/Codex/Grok 兼容的 API 端点
+- OpenAI Codex（GPT 系列）OAuth 登录
+- Claude Code OAuth 登录
+- Grok Build OAuth 登录
+- 支持流式、非流式响应，以及受支持场景下的 WebSocket 响应
+- 函数调用/工具支持
+- 多模态输入（文本、图片）
+- 多账户支持与轮询负载均衡
+- Gemini AI Studio API 密钥支持
+- 通过配置接入 OpenAI 兼容上游（例如 OpenRouter）
+- 可复用的 Go SDK（见 `docs/sdk-usage_CN.md`）
 
-[![https://www.packyapi.com/register?aff=cliproxyapi](./assets/packycode-en.png)](https://www.packyapi.com/register?aff=cliproxyapi)
+## 新手入门
 
-Thanks to PackyCode for sponsoring this project!
+CLIProxyAPI 用户手册：[https://help.router-for.me/cn/](https://help.router-for.me/cn/)
 
-PackyCode is a reliable and efficient API relay service provider, offering relay services for Claude Code, Codex, Gemini, and more.
+## 多账号场景下保持 Codex Prompt Cache 稳定
 
-PackyCode provides special discounts for our software users: register using <a href="https://www.packyapi.com/register?aff=cliproxyapi">this link</a> and enter the "cliproxyapi" promo code during recharge to get 10% off.
+当 New API 等 OpenAI 兼容网关把 `/v1/responses` 请求转发给 CLIProxyAPI，并由 CLIProxyAPI 管理多个 Codex OAuth 账号时，请使用本节配置。
 
----
+如果不启用会话亲和，`round-robin` 可能在每一轮请求时选择不同的 Codex 账号。Prompt Cache 通常不能跨账号/会话命名空间迁移，因此即使 `prompt_cache_key` 相同，缓存也可能反复退回冷缓存或只命中较短的前缀。
 
-<table>
-<tbody>
-<tr>
-<td width="180"><a href="https://www.aicodemirror.ai/register?invitecode=TJNAIF"><img src="./assets/aicodemirror.png" alt="AICodeMirror" width="150"></a></td>
-<td>Thanks to AICodeMirror for sponsoring this project! AICodeMirror provides official high-stability relay services for Claude Code / Codex / Gemini, with enterprise-grade concurrency, fast invoicing, and 24/7 dedicated technical support. Claude Code / Codex / Gemini official channels at 38% / 2% / 9% of original price, with extra discounts on top-ups! AICodeMirror offers special benefits for CLIProxyAPI users: register via <a href="https://www.aicodemirror.ai/register?invitecode=TJNAIF">this link</a> to enjoy 20% off your first top-up, and enterprise customers can get up to 25% off!</td>
-</tr>
-<tr>
-<td width="180"><a href="https://shop.bmoplus.com/?utm_source=github"><img src="./assets/bmoplus.png" alt="BmoPlus" width="150"></a></td>
-<td>Huge thanks to BmoPlus for sponsoring this project! BmoPlus is a highly reliable AI account provider built strictly for heavy AI users and developers. They offer rock-solid, ready-to-use accounts and official top-up services for ChatGPT Plus / ChatGPT Pro (Full Warranty) / Claude Pro / Super Grok / Gemini Pro. By registering and ordering through <a href="https://shop.bmoplus.com/?utm_source=github">BmoPlus - Premium AI Accounts & Top-ups</a>, users can unlock the mind-blowing rate of <b>10% of the official GPT subscription price (90% OFF)</b>!</td>
-</tr>
-<tr>
-<td width="180"><a href="https://visioncoder.cn/"><img src="./assets/visioncoder.png" alt="VisionCoder" width="150"></a></td>
-<td>Thanks to VisionCoder for supporting this project. <a href="https://visioncoder.cn/">VisionCoder Developer Platform</a> is a reliable and efficient API relay service provider, offering access to mainstream AI models such as Claude Code, Codex, and Gemini. It helps developers and teams integrate AI capabilities more easily and improve productivity. Additionally, VisionCoder now offers retail channels for <b>Claude Max 200 and GPT Pro 200 premium accounts</b>, providing users with instant access to top-tier AI computing power and features.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://apikey.fun/register?aff=CLIProxyAPI"><img src="./assets/apikey.png" alt="APIKEY.FUN" width="150"></a></td>
-<td>Thanks to APIKEY.FUN for sponsoring this project! APIKEY.FUN is a professional enterprise-grade AI relay platform dedicated to providing stable, efficient, and low-cost AI model API access for enterprises and individual developers. The platform supports popular mainstream models such as Claude, OpenAI, and Gemini, with prices as low as 7% of the official price. Register through this project's <a href="https://apikey.fun/register?aff=CLIProxyAPI">exclusive link</a> to enjoy a special <b>permanent 5% top-up discount</b>.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://runapi.co/register?aff=FivD"><img src="./assets/runapi.png" alt="RunAPI" width="150"></a></td>
-<td>RunAPI is an efficient and stable API platform—an alternative to OpenRouter. A single API Key gives you access to 150+ leading models, including OpenAI, Claude, Gemini, DeepSeek, Grok, and more, at prices as low as 10% of the original (up to 90% off), with exceptional stability. It's seamlessly compatible with tools like Claude Code, OpenClaw, and others. RunAPI offers an exclusive perk for CPA users: <a href="https://runapi.co/register?aff=FivD">register</a> and contact an administrator to claim ¥7 in free credit.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://t.me/CyberWlD/218"><img src="./assets/cyberpay.jpg" alt="CyberPay" width="150"></a></td>
-<td>CyberPay was founded in 2021. We are committed to providing stable, efficient, and secure payment settlement solutions for AI industry merchants. Working with us helps your website platform solve Alipay and WeChat payment collection needs. We support business cooperation for selling GPT, Gemini, Claude, and Codex accounts, relay platforms, and other related services, helping merchants address payment collection challenges. <a href="https://t.me/CyberWlD/218">Contact us</a> to start your path to growth.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://console.apito.ai/agent/register/pJq9T52Fpugrhpgo"><img src="./assets/claudeapi.png" alt="ClaudeAPI" width="150"></a></td>
-<td>Thanks to <a href="https://console.apito.ai/agent/register/pJq9T52Fpugrhpgo">Claude API</a> for sponsoring this project! Claude API is an official-channel API provider focused on Claude models. Built on Anthropic official keys and AWS Bedrock official channels, it provides a stable integration experience for Claude Code and Agent applications, supports the full Claude model family, and preserves official capabilities such as Tool Use and long context. The service is not reverse-engineered and does not downgrade model capabilities, making it suitable for heavy Claude Code users, Agent engineers, and enterprise technical teams. Register through the <a href="https://console.apito.ai/agent/register/pJq9T52Fpugrhpgo">Exclusive link</a> and contact customer support to claim free test credits. Invoicing and team onboarding are also supported.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://code0.ai/agent/register/slxVMR3uVBoRgNBf"><img src="./assets/code0.png" alt="code0" width="150"></a></td>
-<td>Thanks to <a href="https://code0.ai/agent/register/slxVMR3uVBoRgNBf">Code0</a> for sponsoring this project! code0.ai is an AI coding workspace for developers and technical teams, bringing together mainstream Agent coding capabilities such as Claude Code and Codex. It supports common development scenarios including code generation, project understanding, debugging, code review, and documentation. It is suitable for independent developers, Agent engineers, open-source maintainers, and enterprise R&D teams, with invoicing and team onboarding supported. Register through the <a href="https://code0.ai/agent/register/slxVMR3uVBoRgNBf">Exclusive link</a> and contact customer support to claim free test credits and experience a more efficient AI coding workflow.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://api.fenno.ai/register?redirect=/purchase?tab=subscription%26group=16&amp;aff=DQFAMNB6CBLY"><img src="./assets/fennoai.png" alt="FennoAI" width="150"></a></td>
-<td>Thanks to <a href="https://api.fenno.ai/register?redirect=/purchase?tab=subscription%26group=16&amp;aff=DQFAMNB6CBLY">Fenno.ai</a> for sponsoring this project! Fenno.ai is a stable and efficient API relay service provider currently focused on Codex relay services. It is compatible with OpenAI and Anthropic protocols and can flexibly connect to mainstream coding tools such as Codex, Claude Code, and OpenCode. It can reliably support enterprise-grade demand of hundreds of billions of tokens per day, with B2B settlement and invoicing for domestic and overseas entities. Fenno.ai offers an exclusive benefit for CLIProxyAPI users: subscribe to the great-value Coding Plan with <b>9.9 yuan / $150 quota</b> through <a href="https://api.fenno.ai/register?redirect=/purchase?tab=subscription%26group=16&amp;aff=DQFAMNB6CBLY">this link</a>, and invite friends to earn up to 20% rewards.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://s.qiniu.com/7zUJri"><img src="./assets/qiniucloud.png" alt="Qiniu Cloud AI" width="150"></a></td>
-<td>Thanks to <a href="https://s.qiniu.com/7zUJri">Qiniu Cloud AI</a> for sponsoring this project! Qiniu Cloud AI is an enterprise-grade large-model MaaS platform under Qiniu Cloud (02567.HK). It provides one-stop access to 150+ mainstream global models, is compatible with protocols from major global model providers, and covers full-modal processing capabilities for text, image, audio, video, and files. It serves more than 1.69 million enterprise and developer users. Exclusive benefits: enterprise users can claim 12 million free tokens, and invite friends to earn up to tens of billions of tokens.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://cubence.com/signup?code=CLIPROXYAPI&source=cpa"><img src="./assets/cubence.png" alt="Cubence" width="150"></a></td>
-<td>Thanks to Cubence for sponsoring this project! Cubence is a reliable and efficient API relay service provider, offering relay services for Claude Code, Codex, Gemini, and more. Cubence provides special discounts for our software users: register using <a href="https://cubence.com/signup?code=CLIPROXYAPI&source=cpa">this link</a> and enter the "CLIPROXYAPI" promo code during recharge to get 10% off.</td>
-</tr>
-<tr>
-<td width="180"><a href="https://www.fastaitoken.com/"><img src="./assets/fastaitoken.png" alt="FastAIToken" width="150"></a></td>
-<td>Thanks to <a href="https://www.fastaitoken.com/">FastAIToken</a> for sponsoring this project! FastAIToken is an AI API aggregation platform built for developers, focused on speed and stability. It supports leading AI models including OpenAI, Claude, Gemini, and more. With a 1:1 recharge ratio (¥1 = $1 in API credits), developers can access the world's top AI models at lower cost and with greater convenience. <a href="https://t.me/+stwq0MLi0PtkZTZl">Telegram Support Group</a><br/>The platform offers multiple channels to suit different needs: an ultra-low-cost 0.02× OpenAI promotional tier (limited time), OpenAI channels starting from 0.25×, 0.7× Claude with 95% fixed cache, and 1.2× Claude Max channels. It also provides a public status page displaying real-time availability, latency, and operational status for every channel, ensuring transparent and reliable service. In addition, FastAIToken offers 24/7 human technical support (no bots) for rapid response to developers' needs. For enterprise customers, dedicated SLA-backed channel pools are available with guaranteed stability, contract support, invoicing, and dedicated maintenance.</td>
-</tr>
-</tbody>
-</table>
+### 必需配置
 
-## Overview
-
-- OpenAI/Gemini/Claude/Grok compatible API endpoints for CLI models
-- OpenAI Codex support (GPT models) via OAuth login
-- Claude Code support via OAuth login
-- Grok Build support via OAuth login
-- Streaming, non-streaming, and WebSocket responses where supported
-- Function calling/tools support
-- Multimodal input support (text and images)
-- Multiple accounts with round-robin load balancing (Gemini, OpenAI, Claude, Grok)
-- Simple CLI authentication flows (Gemini, OpenAI, Claude, Grok)
-- Generative Language API Key support
-- AI Studio Build multi-account load balancing
-- Claude Code multi-account load balancing
-- OpenAI Codex multi-account load balancing
-- Grok Build multi-account load balancing
-- OpenAI-compatible upstream providers via config (e.g., OpenRouter)
-- Reusable Go SDK for embedding the proxy (see `docs/sdk-usage.md`)
-
-## Getting Started
-
-CLIProxyAPI Guides: [https://help.router-for.me/](https://help.router-for.me/)
-
-## Stable Codex prompt caching with multiple accounts
-
-Use this configuration when another OpenAI-compatible gateway (for example, New API) forwards `/v1/responses` requests to CLIProxyAPI and CLIProxyAPI manages multiple Codex OAuth accounts.
-
-Without session affinity, `round-robin` may select a different Codex account for each turn. Prompt caches are not expected to move between account/session namespaces, so the same `prompt_cache_key` can repeatedly fall back to a cold cache or a short cached prefix.
-
-### Required configuration
-
-Edit the `routing` and `codex` sections in the active `config.yaml` (or the file passed through `--config`):
+编辑正在使用的 `config.yaml`（或 `--config` 指定的文件），修改其中已有的 `routing` 和 `codex` 段：
 
 ```yaml
 routing:
@@ -145,247 +72,94 @@ codex:
 ```
 
 > [!IMPORTANT]
-> Edit the existing `routing:` and `codex:` sections. Do not add duplicate top-level YAML keys, because a duplicate may override or hide the other section depending on the YAML editor/parser.
+> 请修改已有的 `routing:` 和 `codex:` 段，不要添加重复的 YAML 顶层键。重复键可能被编辑器或 YAML 解析器覆盖，导致其中一段配置实际上没有生效。
 
-What these settings do:
+各配置项作用：
 
-- `routing.strategy: "round-robin"` distributes **new sessions** across available credentials.
-- `routing.session-affinity: true` reads stable session signals, including the Responses body `prompt_cache_key`, **before credential selection** and binds the session to one credential.
-- `routing.session-affinity-ttl: "1h"` keeps an idle binding for up to one hour; every successful affinity lookup refreshes its expiry.
-- `codex.identity-confuse: true` deterministically remaps Codex tracking/cache identifiers for the selected credential. It is active when session affinity is enabled (or when `fill-first` routing is used).
+- `routing.strategy: "round-robin"`：只在**新会话**首次进入时，把它分配给一个可用凭据。
+- `routing.session-affinity: true`：在选择凭据之前读取稳定会话标识，包括 Responses body 中的 `prompt_cache_key`，然后把该会话绑定到同一个凭据。
+- `routing.session-affinity-ttl: "1h"`：空闲绑定最多保留一小时；每次成功命中亲和绑定都会刷新过期时间。
+- `codex.identity-confuse: true`：针对选中的 Codex 凭据，对缓存/跟踪标识做确定性重映射。启用 session affinity（或使用 `fill-first`）时生效。
 
-For a Responses request with a stable cache key, the Codex upstream receives one consistent identity:
-
-```text
-body.prompt_cache_key = <stable credential-scoped ID>
-Session_id            = <same ID>
-Conversation_id       = <same ID>
-```
-
-This provides both required levels of affinity:
-
-1. `prompt_cache_key` selects the same Codex OAuth credential in CLIProxyAPI.
-2. `prompt_cache_key`, `Session_id`, and `Conversation_id` identify the same session to the Codex upstream.
-
-If the cache key is absent and no other stable session identity can be derived, CLIProxyAPI does not invent these cache/session identifiers solely for a Responses request.
-
-### Using CLIProxyAPI behind New API
-
-Configure the New API channel as an **OpenAI-compatible** channel:
+对于带稳定缓存键的 Responses 请求，Codex 上游最终会收到一致的标识：
 
 ```text
-Channel type: OpenAI-compatible
-Base URL:     http://<cli-proxy-host>:8317
-API key:      one key from CLIProxyAPI's api-keys list
-Endpoint:     /v1/responses
-Models:       the Codex models exposed by CLIProxyAPI
+body.prompt_cache_key = <按所选凭据隔离的稳定 ID>
+Session_id            = <相同 ID>
+Conversation_id       = <相同 ID>
 ```
 
-Do not configure the New API channel as a direct ChatGPT Subscription/Codex channel when its upstream is CLIProxyAPI: that adapter targets ChatGPT's private `/backend-api/codex/responses` path instead of CLIProxyAPI's public `/v1/responses` endpoint.
+这样同时建立两层亲和：
 
-The front gateway must preserve `prompt_cache_key` in the Responses JSON body. Clients do not need to generate `Session_id` or `Conversation_id`; CLIProxyAPI derives both from the stable cache identity before sending the request to Codex.
+1. CLIProxyAPI 使用 `prompt_cache_key` 将会话固定到同一个 Codex OAuth 凭据；
+2. CLIProxyAPI 使用一致的 `prompt_cache_key`、`Session_id` 和 `Conversation_id` 告诉 Codex 上游这是同一个会话。
 
-When both services run on the same host, prefer a private container network or host-gateway address instead of routing through the public domain and TLS stack. Inside a container, `127.0.0.1` refers to that container, not the host or another container.
+如果请求没有缓存键，也不能从其他来源得到稳定会话标识，CLIProxyAPI不会仅为了 Responses 请求凭空创建这些缓存/会话标识。
 
-### Applying and verifying the configuration
+### 在 New API 后面使用 CLIProxyAPI
 
-The normal CLIProxyAPI server watches `config.yaml` and reloads changes automatically. After saving, check the logs for a successful configuration reload. Restart the process only if your embedding or deployment disables the watcher.
+请在 New API 中把 CLIProxyAPI 配置为 **OpenAI 兼容渠道**：
 
-Then send at least three serial requests with:
+```text
+渠道类型：OpenAI 兼容
+Base URL：http://<cli-proxy-host>:8317
+密钥：    CLIProxyAPI 配置中 api-keys 列表里的一个密钥
+接口：    /v1/responses
+模型：    CLIProxyAPI 对外提供的 Codex 模型
+```
 
-- the same model;
-- the same prompt prefix/body;
-- the same high-entropy `prompt_cache_key`;
-- enough input tokens for upstream prompt caching.
+当上游是 CLIProxyAPI 时，不要把该渠道配置成 New API 的“ChatGPT Subscription/Codex”直连类型：该适配器面向 ChatGPT 私有的 `/backend-api/codex/responses`，而 CLIProxyAPI 对外提供的是标准 `/v1/responses`。
 
-Expected behavior:
+前置网关必须保留 Responses JSON body 中的 `prompt_cache_key`。客户端不需要自行生成 `Session_id` 或 `Conversation_id`；CLIProxyAPI会在请求 Codex 上游前，根据稳定缓存标识生成这两个值。
 
-1. The first successful request may be a cold-cache miss.
-2. Subsequent successful requests should remain bound to the same credential and normally report increasing/stable `cached_tokens`.
-3. Logs should show a `session-affinity` new binding followed by cache hits for the same session.
+如果 New API 与 CLIProxyAPI 在同一台机器上，优先使用私有容器网络或宿主机网关地址，不要绕公网域名和 TLS 再回到本机。容器内的 `127.0.0.1` 指向该容器自身，并不指向宿主机或另一个容器。
 
-### Operational notes
+### 应用配置与验证
 
-- Affinity bindings are stored in memory. A CLIProxyAPI restart clears them. Changing `routing.strategy`, `routing.session-affinity`, or `routing.session-affinity-ttl` hot-swaps the selector and also clears existing bindings, so the first request afterward may be cold.
-- If a bound credential becomes disabled, rate-limited, quota-exhausted, or otherwise unavailable, automatic failover selects another credential. A cache miss after that failover is expected.
-- The affinity key includes provider, session identity, and model. Changing the model can create a different binding.
-- Use a unique, high-entropy `prompt_cache_key` per conversation. Do not reuse one static key across unrelated users or chats; identical keys can intentionally share one affinity/cache namespace.
-- `identity-confuse` scopes the upstream identity to the selected Codex credential, but it does not repair a missing or constantly changing client cache key.
-- Upstream overload errors are independent of cache affinity and may still occur.
+CLIProxyAPI正常启动方式会监听 `config.yaml` 并自动热重载。保存后，请在日志中确认配置已成功重新加载。只有嵌入式部署或特殊启动方式禁用了 watcher 时，才需要重启进程。
 
-If caching still alternates between high and zero/short-prefix hits, verify that:
+然后至少串行发送三次请求，并保持：
 
-1. there is only one effective `routing:` and one effective `codex:` section;
-2. the running configuration reports `session-affinity: true` and `identity-confuse: true`;
-3. the front gateway preserved `prompt_cache_key`;
-4. the client kept the key, model, and prompt prefix stable;
-5. the bound Codex credential did not enter cooldown or fail over.
+- 模型相同；
+- Prompt 前缀/请求 body 相同；
+- 使用同一个高熵 `prompt_cache_key`；
+- 输入 token 足够达到上游 Prompt Cache 门槛。
 
-## Management API
+预期表现：
 
-see [MANAGEMENT_API.md](https://help.router-for.me/management/api)
+1. 第一个成功请求允许是冷缓存；
+2. 后续成功请求应保持使用同一凭据，`cached_tokens` 通常会升高并保持稳定；
+3. 日志应先出现一次 `session-affinity` 新绑定，随后同一会话持续出现 cache hit。
 
-## Usage Statistics
+### 运维说明
 
-Since v6.10.0, CLIProxyAPI and [CPAMC](https://github.com/router-for-me/Cli-Proxy-API-Management-Center) no longer ship built-in usage statistics. If you need usage statistics, use:
+- 会话亲和绑定保存在内存中。CLIProxyAPI重启会清空绑定；热更新 `routing.strategy`、`routing.session-affinity` 或 `routing.session-affinity-ttl` 也会替换 selector 并清空已有绑定，因此变更后的首个请求可能冷缓存。
+- 如果已绑定凭据被禁用、限流、配额耗尽或暂时不可用，系统会自动故障转移到另一个凭据；切换后的首次缓存 miss 属于正常现象。
+- 亲和键包含 provider、会话标识和模型；更换模型可能建立另一条绑定。
+- 每个会话应使用唯一且高熵的 `prompt_cache_key`。不要让无关用户或无关对话共用一个静态 key；相同 key 会共享同一个亲和/缓存命名空间。
+- `identity-confuse` 会按选中的 Codex 凭据隔离上游标识，但不能修复客户端没有 cache key 或每次请求都更换 key 的情况。
+- 上游 overloaded 等拥塞错误与缓存亲和相互独立，启用本配置后仍可能发生。
 
-### [CPA Usage Keeper](https://github.com/Willxup/cpa-usage-keeper)
+如果缓存仍在高命中与 0/短前缀之间跳变，请依次确认：
 
-Standalone persistence and visualization service for CLIProxyAPI, with periodic data sync, SQLite storage, aggregate APIs, and a built-in dashboard for usage and statistics.
+1. 配置中只有一份实际生效的 `routing:` 和 `codex:`；
+2. 运行时配置确实是 `session-affinity: true` 和 `identity-confuse: true`；
+3. 前置网关没有删除 `prompt_cache_key`；
+4. 客户端保持 key、模型和 Prompt 前缀稳定；
+5. 已绑定的 Codex 凭据期间没有进入 cooldown 或发生故障转移。
 
-### [CPA-Manager-Plus](https://github.com/seakee/CPA-Manager-Plus)
+## 管理 API 文档
 
-Full CLIProxyAPI management center with request-level monitoring and cost estimates. CPA-Manager tracks collected requests by account, model, channel, latency, status, and token usage; estimates cost with editable model prices and one-click LiteLLM price sync; persists events in SQLite; and provides Codex account-pool operations with batch inspection, quota detection, unhealthy account discovery, cleanup suggestions, and one-click execution for day-to-day multi-account maintenance.
+请参见 [Management API 文档](https://help.router-for.me/cn/management/api)。
 
-## SDK Docs
+## SDK 文档
 
-- Usage: [docs/sdk-usage.md](docs/sdk-usage.md)
-- Advanced (executors & translators): [docs/sdk-advanced.md](docs/sdk-advanced.md)
-- Access: [docs/sdk-access.md](docs/sdk-access.md)
-- Watcher: [docs/sdk-watcher.md](docs/sdk-watcher.md)
-- Custom Provider Example: `examples/custom-provider`
+- 使用文档：[docs/sdk-usage_CN.md](docs/sdk-usage_CN.md)
+- 高级（执行器与翻译器）：[docs/sdk-advanced_CN.md](docs/sdk-advanced_CN.md)
+- 认证：[docs/sdk-access_CN.md](docs/sdk-access_CN.md)
+- 凭据加载/更新：[docs/sdk-watcher_CN.md](docs/sdk-watcher_CN.md)
+- 自定义 Provider 示例：`examples/custom-provider`
 
-## Contributing
+## 许可证
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Who is with us?
-
-Those projects are based on CLIProxyAPI:
-
-### [vibeproxy](https://github.com/automazeio/vibeproxy)
-
-Native macOS menu bar app to use your Claude Code & ChatGPT subscriptions with AI coding tools - no API keys needed
-
-### [Subtitle Translator](https://github.com/VjayC/SRT-Subtitle-Translator-Validator)
-
-A cross-platform desktop and web app to translate and validate SRT subtitles using your existing LLM subscriptions (Gemini, ChatGPT, Claude, etc.) via CLIProxyAPI - no API keys needed.
-
-### [CCS (Claude Code Switch)](https://github.com/kaitranntt/ccs)
-
-CLI wrapper for instant switching between multiple Claude accounts and alternative models (Gemini, Codex, Antigravity) via CLIProxyAPI OAuth - no API keys needed
-
-### [Quotio](https://github.com/nguyenphutrong/quotio)
-
-Native macOS menu bar app that unifies Claude, Gemini, OpenAI, and Antigravity subscriptions with real-time quota tracking and smart auto-failover for AI coding tools like Claude Code, OpenCode, and Droid - no API keys needed.
-
-### [ProxyPilot](https://github.com/Finesssee/ProxyPilot)
-
-Windows-native CLIProxyAPI fork with TUI, system tray, and multi-provider OAuth for AI coding tools - no API keys needed.
-
-### [Claude Proxy VSCode](https://github.com/uzhao/claude-proxy-vscode)
-
-VSCode extension for quick switching between Claude Code models, featuring integrated CLIProxyAPI as its backend with automatic background lifecycle management.
-
-### [ZeroLimit](https://github.com/0xtbug/zero-limit)
-
-Windows desktop app built with Tauri + React for monitoring AI coding assistant quotas via CLIProxyAPI. Track usage across Gemini, Claude, OpenAI Codex, and Antigravity accounts with real-time dashboard, system tray integration, and one-click proxy control - no API keys needed.
-
-### [CPA-XXX Panel](https://github.com/ferretgeek/CPA-X)
-
-A lightweight web admin panel for CLIProxyAPI with health checks, resource monitoring, real-time logs, auto-update, request statistics and pricing display. Supports one-click installation and systemd service.
-
-### [CLIProxyAPI Tray](https://github.com/kitephp/CLIProxyAPI_Tray)
-
-A Windows tray application implemented using PowerShell scripts, without relying on any third-party libraries. The main features include: automatic creation of shortcuts, silent running, password management, channel switching (Main / Plus), and automatic downloading and updating.
-
-### [霖君](https://github.com/wangdabaoqq/LinJun)
-
-霖君 is a cross-platform desktop application for managing AI programming assistants, supporting macOS, Windows, and Linux systems. Unified management of Claude Code, Gemini, OpenAI Codex, and other AI coding tools, with local proxy for multi-account quota tracking and one-click configuration.
-
-### [CLIProxyAPI Dashboard](https://github.com/itsmylife44/cliproxyapi-dashboard)
-
-A modern web-based management dashboard for CLIProxyAPI built with Next.js, React, and PostgreSQL. Features real-time log streaming, structured configuration editing, API key management, OAuth provider integration for Claude/Gemini/Codex, usage analytics, container management, and config sync with OpenCode via companion plugin - no manual YAML editing needed.
-
-### [All API Hub](https://github.com/qixing-jk/all-api-hub)
-
-Browser extension for one-stop management of New API-compatible relay site accounts, featuring balance and usage dashboards, auto check-in, one-click key export to common apps, in-page API availability testing, and channel/model sync and redirection. It integrates with CLIProxyAPI through the Management API for one-click provider import and config sync.
-
-### [Shadow AI](https://github.com/HEUDavid/shadow-ai)
-
-Shadow AI is an AI assistant tool designed specifically for restricted environments. It provides a stealthy operation
-mode without windows or traces, and enables cross-device AI Q&A interaction and control via the local area network (
-LAN). Essentially, it is an automated collaboration layer of "screen/audio capture + AI inference + low-friction delivery",
-helping users to immersively use AI assistants across applications on controlled devices or in restricted environments.
-
-### [ProxyPal](https://github.com/buddingnewinsights/proxypal)
-
-Cross-platform desktop app (macOS, Windows, Linux) wrapping CLIProxyAPI with a native GUI. Connects Claude, ChatGPT, Gemini, GitHub Copilot, and custom OpenAI-compatible endpoints with usage analytics, request monitoring, and auto-configuration for popular coding tools - no API keys needed.
-
-### [CLIProxyAPI Quota Inspector](https://github.com/AllenReder/CLIProxyAPI-Quota-Inspector)
-
-Ready-to-use cross-platform quota inspector for CLIProxyAPI, supporting per-account codex 5h/7d quota windows, plan-based sorting, status coloring, and multi-account summary analytics.
-
-### [CLIProxy Pool Watch](https://github.com/murasame612/CLIProxyPoolWidget)
-
-Native macOS SwiftUI app for monitoring ChatGPT/Codex account quotas in CLIProxyAPI pools. Displays account availability, Plus-base capacity, 5-hour and weekly quota bars, plan weights, and restore forecasts through the Management API.
-
-### [Panopticon](https://github.com/eltmon/panopticon-cli)
-
-Multi-agent orchestration for AI coding assistants. Runs CLIProxyAPI as a local sidecar so its agents can drive GPT models through a ChatGPT subscription, pointing Claude Code at an Anthropic-compatible endpoint with no OpenAI API key required.
-
-### [Tunnel Agent](https://github.com/Villoh/tunnel-agent)
-
-Windows desktop UI that manages CLIProxyAPI and Perplexity WebUI Scraper from a single interface, inspired by Quotio and VibeProxy. Connect OAuth providers (Claude, Gemini, Codex, Kimi, Antigravity), custom API keys, and Perplexity session accounts, then point any coding agent at the local endpoint.
-
-### [Quotio Desktop](https://github.com/xiaocoss/quotio-desktop)
-
-Cross-platform (Tauri) port of Quotio for Windows, macOS and Linux. Manages a pool of AI accounts (Codex, Claude Code, GitHub Copilot, Gemini, Antigravity, Kiro, Cursor, Trae, GLM) through CLIProxyAPI, with per-account 5-hour/weekly quota bars, Codex rate-limit reset credits with one-click reset, smart scheduling, usage statistics, and multi-instance Codex — no API keys needed.
-
-### [Universal Chat Provider](https://github.com/maxdewald/vscode-universal-chat-provider)
-
-VS Code extension that brings your Claude, ChatGPT/Codex, Antigravity, Grok, and Kimi subscriptions into GitHub Copilot Chat as native language models — and can power your Git commit messages, chat titles, and summaries too. Runs CLIProxyAPI in a fully managed background lifecycle (download, verify, supervise) shared across all windows, so it's zero-setup. No API keys needed, just OAuth.
-
-### [CPA-Tray-Powershell](https://github.com/IQ-Director/CPA-Tray-Powershell)
-
-A PowerShell-based Windows system tray launcher for CLIProxyAPI. It supports running in the background without a console window, opening the management page, keeping the backend running after the management window closes, and reopening the page from the tray. It also supports checking for CLIProxyAPI updates on startup, SHA-256 verification with rollback, one-click CLIProxyAPI restart and update, PID-validated process management, and safe service shutdown.
-
-### [Grok Search MCP](https://github.com/MapleMapleCat/Grok_Search_Mcp)
-
-An HTTP-only Model Context Protocol server that uses a CLIProxyAPI deployment to provide Grok-powered real-time web search, X/Twitter search, and model discovery to MCP clients. It adds MCP transport, client API-key management, quotas, usage tracking, and a web administration panel.
-
-### [AIUsage](https://github.com/sylearn/AIUsage)
-
-Native macOS SwiftUI dashboard for AI subscriptions and coding proxies. It manages official CLIProxyAPI releases end to end (download, verify, supervise, update, and roll back), unifies OAuth accounts and live models, and connects one gateway to Codex, Claude Code/Science, OpenCode, or OpenAI/Anthropic/Gemini clients, with optional LAN access.
-
-### [Claude Dialects](https://github.com/stefandevo/claude-dialects)
-
-Run multiple native-feeling Claude Code commands, each powered by a different model (Codex, GLM, Kimi, Gemini, Grok, MiniMax, DeepSeek, Cursor, Copilot, Claude). Every dialect launches the real Claude Code interface with its own isolated config, history, ports, and an embedded CLIProxyAPI instance linked through the Go SDK — no separate proxy install. macOS only. Learn more at [claude-dialects.cc](https://claude-dialects.cc/).
-
-> [!NOTE]  
-> If you developed a project based on CLIProxyAPI, please open a PR to add it to this list.
-
-## More choices
-
-Those projects are ports of CLIProxyAPI or inspired by it:
-
-### [9Router](https://github.com/decolua/9router)
-
-A Next.js implementation inspired by CLIProxyAPI, easy to install and use, built from scratch with format translation (OpenAI/Claude/Gemini/Ollama), combo system with auto-fallback, multi-account management with exponential backoff, a Next.js web dashboard, and support for CLI tools (Cursor, Claude Code, Cline, RooCode) - no API keys needed.
-
-### [OmniRoute](https://github.com/diegosouzapw/OmniRoute)
-
-Never stop coding. Smart routing to FREE & low-cost AI models with automatic fallback.
-
-OmniRoute is an AI gateway for multi-provider LLMs: an OpenAI-compatible endpoint with smart routing, load balancing, retries, and fallbacks. Add policies, rate limits, caching, and observability for reliable, cost-aware inference.
-
-### [Playful Proxy API Panel (PPAP)](https://github.com/daishuge/playful-proxy-api-panel)
-
-A public CLIProxyAPI-compatible fork and bundled management panel. It keeps upstream-style usage while restoring built-in usage statistics, adding cache hit rate, first-byte latency, TPS tracking, and Docker-oriented self-hosted installation docs.
-
-### [Codex Switch](https://github.com/9ycrooked/CodexSwitch)
-
-This is a tool built with Tauri 2 + Vue 3 for managing multiple OpenAI Codex desktop accounts. Switch between saved ChatGPT/Codex certification profiles, check 5-hour and weekly quota usage in real time, verify token health, view active account details, and import or save auth.json files without manual copying.
-
-> [!NOTE]  
-> If you have developed a port of CLIProxyAPI or a project inspired by it, please open a PR to add it to this list.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+本项目使用 MIT 许可证，详情参见 [LICENSE](LICENSE)。
