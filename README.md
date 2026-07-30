@@ -124,6 +124,103 @@ PackyCode provides special discounts for our software users: register using <a h
 
 CLIProxyAPI Guides: [https://help.router-for.me/](https://help.router-for.me/)
 
+## Stable Codex prompt caching with multiple accounts
+
+Use this configuration when another OpenAI-compatible gateway (for example, New API) forwards `/v1/responses` requests to CLIProxyAPI and CLIProxyAPI manages multiple Codex OAuth accounts.
+
+Without session affinity, `round-robin` may select a different Codex account for each turn. Prompt caches are not expected to move between account/session namespaces, so the same `prompt_cache_key` can repeatedly fall back to a cold cache or a short cached prefix.
+
+### Required configuration
+
+Edit the `routing` and `codex` sections in the active `config.yaml` (or the file passed through `--config`):
+
+```yaml
+routing:
+  strategy: "round-robin"
+  session-affinity: true
+  session-affinity-ttl: "1h"
+
+codex:
+  identity-confuse: true
+```
+
+> [!IMPORTANT]
+> Edit the existing `routing:` and `codex:` sections. Do not add duplicate top-level YAML keys, because a duplicate may override or hide the other section depending on the YAML editor/parser.
+
+What these settings do:
+
+- `routing.strategy: "round-robin"` distributes **new sessions** across available credentials.
+- `routing.session-affinity: true` reads stable session signals, including the Responses body `prompt_cache_key`, **before credential selection** and binds the session to one credential.
+- `routing.session-affinity-ttl: "1h"` keeps an idle binding for up to one hour; every successful affinity lookup refreshes its expiry.
+- `codex.identity-confuse: true` deterministically remaps Codex tracking/cache identifiers for the selected credential. It is active when session affinity is enabled (or when `fill-first` routing is used).
+
+For a Responses request with a stable cache key, the Codex upstream receives one consistent identity:
+
+```text
+body.prompt_cache_key = <stable credential-scoped ID>
+Session_id            = <same ID>
+Conversation_id       = <same ID>
+```
+
+This provides both required levels of affinity:
+
+1. `prompt_cache_key` selects the same Codex OAuth credential in CLIProxyAPI.
+2. `prompt_cache_key`, `Session_id`, and `Conversation_id` identify the same session to the Codex upstream.
+
+If the cache key is absent and no other stable session identity can be derived, CLIProxyAPI does not invent these cache/session identifiers solely for a Responses request.
+
+### Using CLIProxyAPI behind New API
+
+Configure the New API channel as an **OpenAI-compatible** channel:
+
+```text
+Channel type: OpenAI-compatible
+Base URL:     http://<cli-proxy-host>:8317
+API key:      one key from CLIProxyAPI's api-keys list
+Endpoint:     /v1/responses
+Models:       the Codex models exposed by CLIProxyAPI
+```
+
+Do not configure the New API channel as a direct ChatGPT Subscription/Codex channel when its upstream is CLIProxyAPI: that adapter targets ChatGPT's private `/backend-api/codex/responses` path instead of CLIProxyAPI's public `/v1/responses` endpoint.
+
+The front gateway must preserve `prompt_cache_key` in the Responses JSON body. Clients do not need to generate `Session_id` or `Conversation_id`; CLIProxyAPI derives both from the stable cache identity before sending the request to Codex.
+
+When both services run on the same host, prefer a private container network or host-gateway address instead of routing through the public domain and TLS stack. Inside a container, `127.0.0.1` refers to that container, not the host or another container.
+
+### Applying and verifying the configuration
+
+The normal CLIProxyAPI server watches `config.yaml` and reloads changes automatically. After saving, check the logs for a successful configuration reload. Restart the process only if your embedding or deployment disables the watcher.
+
+Then send at least three serial requests with:
+
+- the same model;
+- the same prompt prefix/body;
+- the same high-entropy `prompt_cache_key`;
+- enough input tokens for upstream prompt caching.
+
+Expected behavior:
+
+1. The first successful request may be a cold-cache miss.
+2. Subsequent successful requests should remain bound to the same credential and normally report increasing/stable `cached_tokens`.
+3. Logs should show a `session-affinity` new binding followed by cache hits for the same session.
+
+### Operational notes
+
+- Affinity bindings are stored in memory. A CLIProxyAPI restart clears them. Changing `routing.strategy`, `routing.session-affinity`, or `routing.session-affinity-ttl` hot-swaps the selector and also clears existing bindings, so the first request afterward may be cold.
+- If a bound credential becomes disabled, rate-limited, quota-exhausted, or otherwise unavailable, automatic failover selects another credential. A cache miss after that failover is expected.
+- The affinity key includes provider, session identity, and model. Changing the model can create a different binding.
+- Use a unique, high-entropy `prompt_cache_key` per conversation. Do not reuse one static key across unrelated users or chats; identical keys can intentionally share one affinity/cache namespace.
+- `identity-confuse` scopes the upstream identity to the selected Codex credential, but it does not repair a missing or constantly changing client cache key.
+- Upstream overload errors are independent of cache affinity and may still occur.
+
+If caching still alternates between high and zero/short-prefix hits, verify that:
+
+1. there is only one effective `routing:` and one effective `codex:` section;
+2. the running configuration reports `session-affinity: true` and `identity-confuse: true`;
+3. the front gateway preserved `prompt_cache_key`;
+4. the client kept the key, model, and prompt prefix stable;
+5. the bound Codex credential did not enter cooldown or fail over.
+
 ## Management API
 
 see [MANAGEMENT_API.md](https://help.router-for.me/management/api)

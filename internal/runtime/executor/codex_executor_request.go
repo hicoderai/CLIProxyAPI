@@ -143,6 +143,7 @@ func (e *CodexExecutor) cacheHelper(ctx context.Context, from sdktranslator.Form
 	}
 	if cache.ID != "" {
 		httpReq.Header.Set("Session_id", cache.ID)
+		httpReq.Header.Set("Conversation_id", cache.ID)
 	}
 	return httpReq, rawJSON, identityState, nil
 }
@@ -189,9 +190,7 @@ func applyCodexIdentityConfuseHeaders(headers http.Header, state *codexIdentityC
 	}
 
 	setCodexSessionHeaderCasePreserved(headers, "Session_id", state.promptCacheKey)
-	if headerValueCaseInsensitive(headers, "Conversation_id") != "" {
-		setHeaderCasePreserved(headers, "Conversation_id", state.promptCacheKey)
-	}
+	setHeaderCasePreserved(headers, "Conversation_id", state.promptCacheKey)
 	headers.Set("X-Client-Request-Id", state.promptCacheKey)
 	headers.Set("Thread-Id", state.promptCacheKey)
 	headers.Set("X-Codex-Window-Id", state.promptCacheKey+":0")

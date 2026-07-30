@@ -46,8 +46,8 @@ func TestCodexExecutorCacheHelper_OpenAIChatCompletions_StablePromptCacheKeyFrom
 	if gotKey != expectedKey {
 		t.Fatalf("prompt_cache_key = %q, want %q", gotKey, expectedKey)
 	}
-	if gotConversation := httpReq.Header.Get("Conversation_id"); gotConversation != "" {
-		t.Fatalf("Conversation_id = %q, want empty", gotConversation)
+	if gotConversation := httpReq.Header.Get("Conversation_id"); gotConversation != expectedKey {
+		t.Fatalf("Conversation_id = %q, want %q", gotConversation, expectedKey)
 	}
 	if gotSession := httpReq.Header["Session_id"]; len(gotSession) != 1 || gotSession[0] != expectedKey {
 		t.Fatalf("Session_id = %#v, want [%q]", gotSession, expectedKey)
@@ -67,6 +67,30 @@ func TestCodexExecutorCacheHelper_OpenAIChatCompletions_StablePromptCacheKeyFrom
 	gotKey2 := gjson.GetBytes(body2, "prompt_cache_key").String()
 	if gotKey2 != expectedKey {
 		t.Fatalf("prompt_cache_key (second call) = %q, want %q", gotKey2, expectedKey)
+	}
+}
+
+func TestCodexExecutorCacheHelper_OpenAIResponsesSetsSessionAndConversationIDs(t *testing.T) {
+	t.Parallel()
+
+	executor := &CodexExecutor{}
+	req := cliproxyexecutor.Request{
+		Model:   "gpt-5.4",
+		Payload: []byte(`{"model":"gpt-5.4","prompt_cache_key":"cache-1"}`),
+	}
+
+	httpReq, body, _, err := executor.cacheHelper(context.Background(), sdktranslator.FormatOpenAIResponse, "https://example.com/responses", nil, req, req.Payload, []byte(`{"model":"gpt-5.4","stream":true}`))
+	if err != nil {
+		t.Fatalf("cacheHelper error: %v", err)
+	}
+	if got := gjson.GetBytes(body, "prompt_cache_key").String(); got != "cache-1" {
+		t.Fatalf("prompt_cache_key = %q, want cache-1", got)
+	}
+	if got := httpReq.Header.Get("Session_id"); got != "cache-1" {
+		t.Fatalf("Session_id = %q, want cache-1", got)
+	}
+	if got := httpReq.Header.Get("Conversation_id"); got != "cache-1" {
+		t.Fatalf("Conversation_id = %q, want cache-1", got)
 	}
 }
 
@@ -90,6 +114,9 @@ func TestCodexExecutorCacheHelper_UsesDerivedSessionUUID(t *testing.T) {
 	}
 	if got := httpReq.Header.Get("Session_id"); got != expectedKey {
 		t.Fatalf("Session_id = %q, want %q", got, expectedKey)
+	}
+	if got := httpReq.Header.Get("Conversation_id"); got != expectedKey {
+		t.Fatalf("Conversation_id = %q, want %q", got, expectedKey)
 	}
 	if _, errParse := uuid.Parse(expectedKey); errParse != nil {
 		t.Fatalf("derived prompt cache key %q is not a UUID: %v", expectedKey, errParse)
@@ -146,8 +173,14 @@ func TestCodexExecutorCacheHelper_ClaudeUsesClaudeCodeSessionID(t *testing.T) {
 	if gotSession := firstHTTPReq.Header["Session_id"]; len(gotSession) != 1 || gotSession[0] != firstKey {
 		t.Fatalf("first Session_id = %#v, want [%q]", gotSession, firstKey)
 	}
+	if gotConversation := firstHTTPReq.Header.Get("Conversation_id"); gotConversation != firstKey {
+		t.Fatalf("first Conversation_id = %q, want %q", gotConversation, firstKey)
+	}
 	if gotSession := secondHTTPReq.Header["Session_id"]; len(gotSession) != 1 || gotSession[0] != firstKey {
 		t.Fatalf("second Session_id = %#v, want [%q]", gotSession, firstKey)
+	}
+	if gotConversation := secondHTTPReq.Header.Get("Conversation_id"); gotConversation != firstKey {
+		t.Fatalf("second Conversation_id = %q, want %q", gotConversation, firstKey)
 	}
 }
 
@@ -172,6 +205,9 @@ func TestCodexExecutorCacheHelper_ClaudeRejectsBareUserID(t *testing.T) {
 	}
 	if got := httpReq.Header["Session_id"]; len(got) != 0 {
 		t.Fatalf("bare metadata.user_id must not create Session_id, got %#v", got)
+	}
+	if got := httpReq.Header.Get("Conversation_id"); got != "" {
+		t.Fatalf("bare metadata.user_id must not create Conversation_id, got %q", got)
 	}
 	if got := httpReq.Header.Get("Session-Id"); got != "" {
 		t.Fatalf("bare metadata.user_id must not create Session-Id, got %q", got)
@@ -230,6 +266,9 @@ func TestCodexExecutorCacheHelper_IdentityConfuseRemapsBodyAndHeaders(t *testing
 	if gotHeader := httpReq.Header["Session_id"]; len(gotHeader) != 1 || gotHeader[0] != expectedPromptCacheKey {
 		t.Fatalf("Session_id = %#v, want [%q]", gotHeader, expectedPromptCacheKey)
 	}
+	if gotHeader := httpReq.Header.Get("Conversation_id"); gotHeader != expectedPromptCacheKey {
+		t.Fatalf("Conversation_id = %q, want %q", gotHeader, expectedPromptCacheKey)
+	}
 	for _, headerName := range []string{"X-Client-Request-Id", "Thread-Id"} {
 		if gotHeader := httpReq.Header.Get(headerName); gotHeader != expectedPromptCacheKey {
 			t.Fatalf("%s = %q, want %q", headerName, gotHeader, expectedPromptCacheKey)
@@ -250,6 +289,25 @@ func TestCodexExecutorCacheHelper_IdentityConfuseRemapsBodyAndHeaders(t *testing
 	}
 	if gotMetadataWindowID := gjson.Get(gotHeaderMetadata, "window_id").String(); gotMetadataWindowID != expectedPromptCacheKey+":0" {
 		t.Fatalf("X-Codex-Turn-Metadata.window_id = %q, want %q", gotMetadataWindowID, expectedPromptCacheKey+":0")
+	}
+}
+
+func TestApplyCodexIdentityConfuseHeadersCreatesConversationID(t *testing.T) {
+	t.Parallel()
+
+	headers := http.Header{}
+	state := codexIdentityConfuseState{
+		enabled:        true,
+		promptCacheKey: "confused-cache-1",
+	}
+
+	applyCodexIdentityConfuseHeaders(headers, &state)
+
+	if got := headers.Get("Session_id"); got != "confused-cache-1" {
+		t.Fatalf("Session_id = %q, want confused-cache-1", got)
+	}
+	if got := headers.Get("Conversation_id"); got != "confused-cache-1" {
+		t.Fatalf("Conversation_id = %q, want confused-cache-1", got)
 	}
 }
 
